@@ -2,15 +2,23 @@ package com.devoteam.barcode;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import io.vertx.ext.auth.impl.UserImpl;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Path("/api/v1/barcodes")
@@ -26,8 +34,10 @@ public class BarcodeResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/upload-csv")
     public String uploadCsv(@FormParam("file") FileUpload file) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             List<List<String>> list = new ArrayList<>();
+            List<Barcode> barcodes = new ArrayList<>();
             try (Reader reader = Files.newBufferedReader(file.uploadedFile())) {
                 try (CSVReader csvReader = new CSVReader(reader)) {
                     String[] line;
@@ -36,13 +46,23 @@ public class BarcodeResource {
                         if ("Barcode".equals(line[0])) {
                             continue;
                         }
+                        Barcode barcode = new Barcode();
+                        // Barcode,Category,ItemName,SellingPrice,ManufacturingDate,ExpiryDate,Quantity
+                        barcode.barcode = line[0];
+                        barcode.category = line[1];
+                        barcode.itemName = line[2];
+                        barcode.sellingPrice = line[3] == null ? null : new BigDecimal(line[3]);
+                        barcode.manufacturingDate = line[4] == null ? null : LocalDate.parse(line[4], formatter);
+                        barcode.expiryDate = line[5] == null ? null : LocalDate.parse(line[5], formatter);
+                        barcode.quantity = line[6] == null ? 0 : Long.parseLong(line[6]);
+                        barcodes.add(barcode);
                         list.add(Arrays.asList(line));
                     }
                 } catch (CsvValidationException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return list.toString();
+            return barcodes.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

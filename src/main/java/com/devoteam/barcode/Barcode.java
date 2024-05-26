@@ -3,7 +3,9 @@ package com.devoteam.barcode;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "barcodes",
@@ -22,12 +24,38 @@ public class Barcode {
 
     public BigDecimal sellingPrice;
 
-    public Date manufacturingDate;
+    public LocalDate manufacturingDate;
 
-    public Date expiryDate;
+    public LocalDate expiryDate;
 
     public long quantity;
 
     @Version
     public int version;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Barcode barcode1)) return false;
+        return quantity == barcode1.quantity && version == barcode1.version && Objects.equals(barcode, barcode1.barcode) && Objects.equals(category, barcode1.category) && Objects.equals(itemName, barcode1.itemName) && Objects.equals(sellingPrice, barcode1.sellingPrice) && Objects.equals(manufacturingDate, barcode1.manufacturingDate) && Objects.equals(expiryDate, barcode1.expiryDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(barcode, category, itemName, sellingPrice, manufacturingDate, expiryDate, quantity, version);
+    }
+
+    @Override
+    public String toString() {
+        return "Barcode{" +
+                "barcode='" + barcode + '\'' +
+                ", category='" + category + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", sellingPrice=" + sellingPrice +
+                ", manufacturingDate=" + manufacturingDate +
+                ", expiryDate=" + expiryDate +
+                ", quantity=" + quantity +
+                ", version=" + version +
+                '}';
+    }
 }
