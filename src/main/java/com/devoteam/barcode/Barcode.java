@@ -1,5 +1,6 @@
 package com.devoteam.barcode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class Barcode {
 
     public long quantity;
 
+    @JsonIgnore
     @Version
     public int version;
 

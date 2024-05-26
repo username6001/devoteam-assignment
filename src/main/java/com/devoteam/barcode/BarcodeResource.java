@@ -2,7 +2,9 @@ package com.devoteam.barcode;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import io.vertx.ext.auth.impl.UserImpl;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
@@ -11,28 +13,30 @@ import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Path("/api/v1/barcodes")
 public class BarcodeResource {
 
+    @Inject
+    private EntityManager em;
+
     @GET
-    public String get() {
-        return "Works!";
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/list")
+    public List<Barcode> get() {
+        return em.createQuery("from Barcode", Barcode.class).getResultList();
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/upload-csv")
+    @Transactional
     public String uploadCsv(@FormParam("file") FileUpload file) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
@@ -55,6 +59,7 @@ public class BarcodeResource {
                         barcode.manufacturingDate = line[4] == null ? null : LocalDate.parse(line[4], formatter);
                         barcode.expiryDate = line[5] == null ? null : LocalDate.parse(line[5], formatter);
                         barcode.quantity = line[6] == null ? 0 : Long.parseLong(line[6]);
+                        em.persist(barcode);
                         barcodes.add(barcode);
                         list.add(Arrays.asList(line));
                     }
