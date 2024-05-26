@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import java.util.Objects;
+
 /**
  * Example JPA entity.
  *
@@ -29,4 +31,24 @@ public class MyEntity {
     public Long id;
 
     public String field;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MyEntity myEntity)) return false;
+        return Objects.equals(id, myEntity.id) && Objects.equals(field, myEntity.field);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, field);
+    }
+
+    @Override
+    public String toString() {
+        return "MyEntity{" +
+                "id=" + id +
+                ", field='" + field + '\'' +
+                '}';
+    }
 }
