@@ -11,6 +11,9 @@ import java.util.Objects;
 @Table(name = "barcodes",
 uniqueConstraints = {
         @UniqueConstraint(columnNames = {"barcode"})
+},
+indexes = {
+        @Index(columnList = "expiryDate")
 })
 public class Barcode {
 
