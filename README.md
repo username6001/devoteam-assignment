@@ -57,6 +57,7 @@ curl --location --request DELETE 'http://localhost:8080/api/v1/barcodes/?barcode
 ```
 
 # TODO
+- change db to in-memory H2 according to the task
 - add data validation
 - add more tests
 - add more code comments
