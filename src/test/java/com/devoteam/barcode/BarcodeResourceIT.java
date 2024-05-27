@@ -39,6 +39,13 @@ public class BarcodeResourceIT {
                 .when().post(BARCODE_URL + "upload-csv")
                 .then()
                 .statusCode(200);
+
+        // should not throw an error if the same file is uploaded again
+        given()
+                .multiPart("file", "barcodes.csv", getClass().getClassLoader().getResourceAsStream("barcodes.csv"))
+                .when().post(BARCODE_URL + "upload-csv")
+                .then()
+                .statusCode(200);
     }
 
     @Test

@@ -51,7 +51,7 @@ public class BarcodeService {
                     continue;
                 }
                 Barcode barcode = csvStringToBarcode(line);
-                em.persist(barcode);
+                em.merge(barcode);
             }
         } catch (CsvValidationException | IOException e) {
             throw new RuntimeException(e);
