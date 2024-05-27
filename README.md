@@ -1,3 +1,6 @@
+# Assignment description
+[assignment.md](assignment.md)
+
 # Run in development mode with testcontainers
 `./script/run-dev.sh`
 OR
@@ -10,11 +13,24 @@ docker-compose build
 docker-compose up
 ```
 
+## Stop docker-compose
+```commandline
+docker-compose down
+```
+OR
+`CTRL-C`
+
 # Run in docker
 ```commandline
 ./scripts/native-docker-build.sh
 ./scripts/postgres-start.sh
 ./scripts/native-docker-start.sh
+```
+
+## Stop docker
+```commandline
+./scripts/postgres-stop.sh
+./scripts/native-docker-stop.sh
 ```
 
 # API
