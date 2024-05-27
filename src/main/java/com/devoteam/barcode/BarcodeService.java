@@ -24,7 +24,7 @@ public class BarcodeService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public List<Barcode> getBarcodes() {
-        return em.createQuery("from Barcode", Barcode.class).getResultList();
+        return em.createQuery("from Barcode order by expiryDate", Barcode.class).getResultList();
     }
 
     private Barcode csvStringToBarcode(String[] csvLine) {
