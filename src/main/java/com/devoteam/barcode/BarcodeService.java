@@ -5,6 +5,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.IOException;
@@ -55,5 +56,18 @@ public class BarcodeService {
         } catch (CsvValidationException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Barcode getBarcode(String barcode) {
+        return em.find(Barcode.class, barcode);
+    }
+
+    @Transactional
+    public Barcode deleteBarcode(String barcodeStr) {
+        Barcode barcodeEntity = em.find(Barcode.class, barcodeStr);
+        if (barcodeEntity != null) {
+            em.remove(barcodeEntity);
+        }
+        return barcodeEntity;
     }
 }

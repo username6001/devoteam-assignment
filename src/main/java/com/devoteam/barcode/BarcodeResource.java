@@ -28,7 +28,7 @@ public class BarcodeResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/list")
+    @Path("/all")
     public List<Barcode> get() {
         return barcodeService.getBarcodes();
     }
@@ -43,15 +43,15 @@ public class BarcodeResource {
         return Response.ok().build();
     }
 
-    @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/echo2")
-    public String echo2(@FormParam("file") FileUpload file) {
-        try {
-            return Files.readString(file.uploadedFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Barcode getBarcode(@QueryParam("barcode") String barcode) {
+        return barcodeService.getBarcode(barcode);
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Barcode deleteBarcode(@QueryParam("barcode") String barcode) {
+        return barcodeService.deleteBarcode(barcode);
     }
 }
