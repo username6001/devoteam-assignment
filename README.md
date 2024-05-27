@@ -29,8 +29,8 @@ OR
 
 ## Stop docker
 ```commandline
-./scripts/postgres-stop.sh
 ./scripts/native-docker-stop.sh
+./scripts/postgres-stop.sh
 ```
 
 # API
